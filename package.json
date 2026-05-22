@@ -1,0 +1,13 @@
+{
+    "name": "webte2-z3",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "start": "node server.js",
+        "start:ws": "node server.js"
+    },
+    "dependencies": {
+        "ws": "^8.18.3"
+    }
+}

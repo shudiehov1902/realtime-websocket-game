@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Curling</title>
+    <link rel="stylesheet" href="./styles.css?v=minimal-lobby-20260424-1">
+</head>
+<body>
+    <main class="page">
+        <header class="hero">
+            <div class="hero-copy">
+                <h1>Curling Arena</h1>
+                <p id="statusText" class="status"></p>
+            </div>
+
+            <div id="heroControls" class="hero-controls" hidden>
+                <button id="pauseButton" class="control-button" type="button">Pause</button>
+                <button id="resumeButton" class="control-button control-button--secondary" type="button">Resume</button>
+                <button id="restartButton" class="control-button control-button--ghost" type="button">Restart Round</button>
+                <button id="disconnectGameButton" class="control-button control-button--danger" type="button" hidden>Disconnect</button>
+            </div>
+        </header>
+
+        <section class="stage">
+            <section id="homeScreen" class="screen-card screen-card--home">
+                <div class="home-actions">
+                    <button id="startLocalButton" class="control-button control-button--home" type="button">Local Match</button>
+                    <button id="openLobbyButton" class="control-button control-button--ghost control-button--home" type="button">Online Room</button>
+                </div>
+
+                <div class="home-links">
+                    <button id="importJsonButton" class="control-button control-button--ghost control-button--small" type="button">Import JSON</button>
+                    <button id="openRulesButton" class="control-button control-button--ghost control-button--small" type="button">Rules</button>
+                </div>
+
+                <input id="importJsonInput" type="file" accept=".json,application/json" hidden>
+            </section>
+
+            <section id="rulesScreen" class="screen-card screen-card--rules" hidden>
+                <div class="rules-copy">
+                    <h2>Rules</h2>
+
+                    <ul class="rules-list">
+                        <li>Drag only the highlighted stone from its start position.</li>
+                        <li>Pull away from the target to aim, then release to launch.</li>
+                        <li>Players take turns and must wait until every moving stone stops.</li>
+                        <li>Stones slow down from friction, bounce from walls, and collide with each other.</li>
+                        <li>The winner is the player whose stone finishes closest to the center of the target.</li>
+                    </ul>
+
+                    <div class="rules-actions">
+                        <button id="backFromRulesButton" class="control-button control-button--ghost" type="button">Back</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="lobbyScreen" class="screen-card screen-card--lobby" hidden>
+                <form id="lobbyForm" class="lobby-form">
+                    <label class="field">
+                        <span class="field-label">Player Name</span>
+                        <input id="playerNameInput" class="field-input" type="text" name="playerName" maxlength="24" placeholder="Vlad" required>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Room Code</span>
+                        <input id="roomCodeInput" class="field-input field-input--code" type="text" name="roomCode" maxlength="12" placeholder="ICE42">
+                    </label>
+
+                    <div class="lobby-actions">
+                        <button id="createRoomButton" class="control-button" type="submit" data-lobby-action="create">Create Room</button>
+                        <button id="joinRoomButton" class="control-button control-button--secondary" type="submit" data-lobby-action="join">Join Room</button>
+                        <button id="disconnectLobbyButton" class="control-button control-button--danger" type="button">Disconnect</button>
+                        <button id="backToHomeButton" class="control-button control-button--ghost" type="button">Back</button>
+                    </div>
+                </form>
+
+                <p id="serverStatusText" class="lobby-status"></p>
+            </section>
+
+            <section id="gameScreen" class="game-screen" hidden>
+                <div class="canvas-wrap">
+                    <canvas id="gameCanvas"></canvas>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="./app.js?v=minimal-lobby-20260424-1" defer></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+    "board": {
+        "baseWidth": 1400,
+        "baseHeight": 800,
+        "padding": 40
+    },
+    "target": {
+        "x": 1080,
+        "y": 400,
+        "radius": 120
+    },
+    "stonesPerPlayer": 4,
+    "stoneRadius": 24,
+    "startPositions": {
+        "player1": {
+            "x": 180,
+            "y": 300
+        },
+        "player2": {
+            "x": 180,
+            "y": 500
+        }
+    },
+    "physics": {
+        "maxDragDistance": 220,
+        "launchPowerMultiplier": 0.05,
+        "frictionPerFrame": 0.992,
+        "stoneCollisionDamping": 0.96,
+        "wallBounceDamping": 0.88,
+        "stopSpeedThreshold": 0.12
+    }
+}
