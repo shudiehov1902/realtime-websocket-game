@@ -1,41 +1,57 @@
-# Curling Arena
+# Realtime WebSocket Game
 
-Two-player curling-style browser game built with:
+Two-player curling-style browser game built for WEBTE2. The game supports local play on one device and online play through a Node.js WebSocket server.
 
-- `HTML`
-- `CSS`
-- `JavaScript`
-- `Canvas API`
-- `Node.js`
-- `ws` WebSocket library
+## Live Project
 
-The project contains:
+- Live demo: [https://node82.webte.fei.stuba.sk/webte_z3/](https://node82.webte.fei.stuba.sk/webte_z3/)
+- GitHub repository: [https://github.com/shudiehov1902/realtime-websocket-game](https://github.com/shudiehov1902/realtime-websocket-game)
 
-- frontend files: `index.html`, `styles.css`, `app.js`
-- game configuration: `config/game-config.json`
-- WebSocket server: `server.js`
+The deployment runs on a temporary university server. If the link is unavailable when you read this, the server may already have been turned off, reset, or reassigned.
 
-## Implemented Functionality
+## Gameplay
 
-- local match on one device
-- online room for two players through WebSocket
-- shared turn order
+Players take turns launching stones toward the target. The winner is determined by the stone closest to the center after the round ends.
+
+Implemented gameplay:
+
+- local two-player match on one device
+- online room for two players
+- shared turn order over WebSocket
 - drag-to-aim shot mechanic
-- stone friction
+- friction-based movement
 - wall bounces
 - stone-to-stone collisions
-- winner detection by closest stone to the target
-- online pause and resume
-- online restart by mutual confirmation
+- closest-stone winner detection
+- pause and resume in online mode
+- restart by mutual confirmation
+- disconnect handling
 - rules screen
-- explicit disconnect action in the UI
 
-## Database
+## Technology Stack
 
-This project does not use a database.
-The whole game works through frontend state plus a Node.js WebSocket server.
+- HTML
+- CSS
+- JavaScript
+- Canvas API
+- Node.js
+- `ws` WebSocket library
 
-## Local Run
+The project does not use a database. Game state lives in the browser and is synchronized through the WebSocket server.
+
+## Project Structure
+
+```text
+index.html                  Main page
+styles.css                  Game UI and layout
+app.js                      Canvas rendering, physics, UI, client networking
+server.js                   WebSocket room server
+config/game-config.json     Main game configuration
+config/test-config.json     Test configuration
+package.json                Node.js scripts and dependency list
+```
+
+## Local Setup
 
 1. Install dependencies:
 
@@ -51,85 +67,30 @@ npm start
 
 3. Open the frontend through a local web server, for example:
 
-- `http://localhost/webte2-z3/`
-
-When the page runs on `localhost`, the browser connects to:
-
-- `ws://127.0.0.1:3000`
-
-## Files Included In Submission
-
-The project is submitted without `node_modules`.
-
-Files included:
-
-- `index.html`
-- `styles.css`
-- `app.js`
-- `config/game-config.json`
-- `server.js`
-- `package.json`
-- `package-lock.json`
-- `README.md`
-
-## Server Deployment
-
-Target server:
-
-- `node82.webte.fei.stuba.sk`
-
-Current uploaded project path:
-
-- `/var/www/node82.webte.fei.stuba.sk/webte2-z3`
-
-### 1. Uploaded Files
-
-The following files were uploaded to the server:
-
-- `index.html`
-- `styles.css`
-- `app.js`
-- `config/game-config.json`
-- `server.js`
-- `package.json`
-- `package-lock.json`
-- `README.md`
-
-### 2. Install Dependencies On The Server
-
-Connect to the server and go to the project directory:
-
-```bash
-ssh xshudiehov@node82.webte.fei.stuba.sk
-cd /var/www/node82.webte.fei.stuba.sk/webte2-z3
+```text
+http://localhost/webte2-z3/
 ```
 
-Install dependencies:
+When the page is opened on `localhost`, the browser connects to:
 
-```bash
-npm install
+```text
+ws://127.0.0.1:3000
 ```
 
-### 3. Start The WebSocket Server
+## Online Mode
 
-Manual start:
+The online mode uses room codes. Two browsers enter the same room and receive synchronized game state from the server.
 
-```bash
-WS_HOST=127.0.0.1 WS_PORT=3000 npm start
-```
+The client expects:
 
-This starts the WebSocket server on:
+- local development: `ws://127.0.0.1:3000`
+- deployed server: `/ws` on the current host
 
-- `ws://127.0.0.1:3000`
+## Deployment Notes
 
-### 4. Nginx Reverse Proxy
+For deployment on Nginx, the static files are served normally and `/ws` must be proxied to the Node.js process.
 
-The frontend is prepared like this:
-
-- on `localhost` it uses `ws://127.0.0.1:3000`
-- on the deployed server it uses `/ws` on the current host
-
-For server deployment, Nginx must proxy `/ws` to the Node.js server:
+Example Nginx WebSocket proxy:
 
 ```nginx
 location /ws {
@@ -142,51 +103,25 @@ location /ws {
 }
 ```
 
-After editing Nginx:
+Example manual server start:
 
 ```bash
-sudo nginx -t
-sudo systemctl reload nginx
+WS_HOST=127.0.0.1 WS_PORT=3000 npm start
 ```
 
-### 5. Optional Persistent Run With systemd
+The deployed course URL is:
 
-Example service file:
-
-```ini
-[Unit]
-Description=Curling Arena WebSocket Server
-After=network.target
-
-[Service]
-Type=simple
-WorkingDirectory=/var/www/node82.webte.fei.stuba.sk/webte2-z3
-ExecStart=/usr/bin/env node /var/www/node82.webte.fei.stuba.sk/webte2-z3/server.js
-Environment=WS_HOST=127.0.0.1
-Environment=WS_PORT=3000
-Restart=always
-User=xshudiehov
-
-[Install]
-WantedBy=multi-user.target
+```text
+https://node82.webte.fei.stuba.sk/webte_z3/
 ```
 
-Then:
+## Verification Checklist
 
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable curling-arena
-sudo systemctl start curling-arena
-sudo systemctl status curling-arena
-```
-
-## Deployment Checklist
-
-- site opens on `node82.webte.fei.stuba.sk`
-- WebSocket server runs on `127.0.0.1:3000`
-- Nginx proxies `/ws` to the Node.js process
-- two browsers can enter the same room
-- both players see the same launched shot
-- pause works for both players
-- restart works for both players
-- disconnect returns the user safely back to the menu
+- page opens and canvas renders
+- local mode can finish a match
+- online room can be joined by two browsers
+- both players see the same turn order
+- launched stones are synchronized
+- pause and resume affect both players
+- restart requires confirmation
+- disconnect returns the UI to a safe state
